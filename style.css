@@ -5,10 +5,10 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     
-    /* 页面居中布局 */
+    /* 居中布局 */
     margin: 0;/*确保页面从边缘开始*/
     height: 100vh;
-    display: flex;/*flex box 模式*/
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -64,14 +64,11 @@ body {
     color: #000;
 }
 
-/* 新增：为包裹容器设置相对定位 */
 .search-wrapper {
-    position: relative; /* 这是让内部绝对定位元素有所参考的关键 */
+    position: relative; /* 让内部绝对定位元素有所参考 */
 }
 
-/* 把#search-history 彻底改造成一个下拉菜单 */
 #search-history {
-    /*  默认状态：隐藏 */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease; 
@@ -81,7 +78,6 @@ body {
     width: 100%;        
     z-index: 100;       /* 在其他元素上 */
 
-    /* 3. 外观样式 */
     background-color: rgba(255, 255, 255, 0.9); 
     border-radius: 20px; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
@@ -89,15 +85,14 @@ body {
     box-sizing: border-box; /* 确保 padding 不会撑大宽度 */
 }
 
-/* 新增：当 #search-history 拥有 .show 类时，让它显示出来 */
 #search-history.show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0); /* 恢复到正常位置 */
+    transform: translateY(0); /* 恢复正常位置 */
 }
 
 #search-history .history-item {
-    background-color: transparent; /* 背景透明即可 */
+    background-color: transparent; /* 背景透明即*/
     color: #333; 
     padding: 10px 15px;
     margin-bottom: 5px;
@@ -110,3 +105,4 @@ body {
 #search-history .history-item:hover {
     background-color: rgba(0, 0, 0, 0.1); /* 鼠标悬停时浅灰色背景 */
 }
+
