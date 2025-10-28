@@ -1,0 +1,13 @@
+# .gitignore for Go backend
+
+# 编译的二进制文件
+*.exe
+main
+
+# 敏感的配置文件
+.env
+
+# IDE 和系统文件
+.vscode/
+.idea/
+.DS_Store
