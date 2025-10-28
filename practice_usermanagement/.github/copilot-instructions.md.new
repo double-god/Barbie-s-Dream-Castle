@@ -1,0 +1,111 @@
+````instructions
+# 全栈用户管理系统 AI 助手指南
+
+此文档帮助 AI 代码助手理解项目架构和开发约定。本项目是一个完整的全栈应用，包含 Go 后端和 React 前端。
+
+## 系统架构
+
+### 后端 (Go)
+- 基于 Gin 的 RESTful API 服务
+- MySQL 数据存储
+- JWT 认证
+- 采用 MVC 架构模式
+
+### 前端 (React)
+- Vite 构建工具
+- React Context 用户状态管理
+- Axios 请求处理
+- 响应式设计
+
+## 关键目录结构
+
+```
+practice_usermanagement/ (后端)
+├── config/       # 配置管理
+├── controller/   # HTTP 处理器
+├── middlewares/  # JWT 认证等中间件
+├── model/        # 数据模型
+├── pkg/         
+│   ├── database/ # 数据库连接
+│   ├── e/       # 错误定义
+│   └── util/    # 工具函数
+└── routes/      # API 路由
+
+user_manage/ (前端)
+├── src/
+│   ├── api/     # API 请求封装
+│   ├── context/ # React Context 定义
+│   └── pages/   # 页面组件
+```
+
+## 核心工作流程
+
+### 认证流程
+1. 用户通过 `/pages/Login.jsx` 或 `/pages/Register.jsx` 提交凭据
+2. 后端 `controller/user.go` 验证并生成 JWT
+3. 前端 `context/AuthContext.jsx` 存储令牌
+4. `middlewares/auth.go` 验证后续请求
+
+### 数据流模式
+- 前端: Components -> AuthContext -> Axios -> API
+- 后端: Router -> Middleware -> Controller -> Model -> Database
+
+## 开发环境设置
+
+### 后端
+```bash
+# MySQL 配置 (.env)
+DBUSER=root
+DBPASSWORD=your_password
+DBHOST=localhost
+DBPORT=3306
+DBNAME=user_management
+
+# 启动服务
+go run main.go
+```
+
+### 前端
+```bash
+cd user_manage
+npm install
+npm run dev
+```
+
+## 项目特定约定
+
+### API 响应格式
+```go
+// pkg/util/response.go
+type Response struct {
+    Code int         `json:"code"`
+    Msg  string      `json:"msg"`
+    Data interface{} `json:"data"`
+}
+```
+
+### 前端状态管理
+- 用户状态集中在 `AuthContext`
+- 全局认证状态通过 Context Provider 提供
+- API 调用使用 Axios 拦截器自动处理认证
+
+### 错误处理
+- 后端: 使用 `pkg/e/msg.go` 中预定义错误码
+- 前端: API 错误在 `api/axios.js` 中统一处理
+
+## 关键集成点
+
+1. **API 客户端配置**:
+   - 基础 URL 和拦截器在 `src/api/axios.js` 配置
+   - 自动附加 JWT 到请求头
+
+2. **环境配置**:
+   - 后端: `.env` 文件管理数据库配置
+   - 前端: `vite.config.js` 配置开发代理
+
+3. **容器化部署**:
+   - 前后端分别有 `Dockerfile`
+   - `docker-compose.yml` 定义完整服务栈
+
+_注：此文档反映当前实践。如有更新请同步修改。_
+````
