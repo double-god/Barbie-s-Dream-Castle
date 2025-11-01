@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import './Login.css';
 
 export default function LoginPage() {
@@ -20,7 +20,7 @@ export default function LoginPage() {
         setSuccess(false);
 
         try {
-            const result = await login(username, password);
+            const _ = await login(username, password);
             setSuccess(true);
             // 显示成功消息后短暂延迟再跳转，让用户看到反馈
             setTimeout(() => {
