@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { loginApi, registerApi } from '../api/axios';
 
 const AuthContext = createContext(null);
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password, email) => {
         try {
-            const response = await registerApi(username, password, email);
+            const _ = await registerApi(username, password, email);
             return { success: true };
         } catch (error) {
             console.error('Register failed:', error);
@@ -54,12 +54,4 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
-};
-
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
 };

@@ -1,7 +1,7 @@
 // src/pages/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import './Login.css';
 
 export default function RegisterPage() {
@@ -11,7 +11,7 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const auth = useAuth(); // 从 Context 获取可能的 register 方法
-    const registerFn = auth.register ?? (async (u, p, e) => ({ success: true }));
+    const registerFn = auth.register ?? (async () => ({ success: true }));
 
     const handleSubmit = async (e) => {
         e.preventDefault();
