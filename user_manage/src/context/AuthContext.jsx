@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { loginApi, registerApi } from '../api/axios';
 
 const AuthContext = createContext(null);
@@ -18,14 +18,23 @@ export const AuthProvider = ({ children }) => {
     const login = async (username, password) => {
         try {
             const response = await loginApi(username, password);
-            const { token: newToken, user: userData } = response;
+            
+            // 检查业务错误码
+            if (response.code === 0 && response.data?.token) {
+                const newToken = response.data.token;
+                const userData = response.data.user || null;
 
-            setToken(newToken);
-            setUser(userData);
-            localStorage.setItem('jwt_token', newToken);
-            localStorage.setItem('user', JSON.stringify(userData));
+                setToken(newToken);
+                setUser(userData);
+                localStorage.setItem('jwt_token', newToken);
+                if (userData) {
+                    localStorage.setItem('user', JSON.stringify(userData));
+                }
 
-            return { success: true };
+                return { success: true };
+            } else {
+                throw new Error(response.msg || '登录失败');
+            }
         } catch (error) {
             console.error('Login failed:', error);
             throw new Error(error.message || '登录失败');
@@ -35,7 +44,11 @@ export const AuthProvider = ({ children }) => {
     const register = async (username, password, email) => {
         try {
             const response = await registerApi(username, password, email);
-            return { success: true };
+            if (response.code === 0) {
+                return { success: true };
+            } else {
+                throw new Error(response.msg || '注册失败');
+            }
         } catch (error) {
             console.error('Register failed:', error);
             throw new Error(error.message || '注册失败');
@@ -54,12 +67,4 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
-};
-
-export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
 };
