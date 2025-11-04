@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/useAuth';
-import '../pages/Login.css';
+import './AuthPage.css';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
@@ -14,9 +14,9 @@ export default function ProfilePage() {
     useEffect(() => {
         // 页面加载时，获取 "我" 的信息
         // api 实例会自动带上 Token
-        api.get('/user/me') // 【【【【【 调用我们新加的 Go 接口 】】】】】
+        api.get('/user/me')
             .then(response => {
-                if (response.data.code === 0) {
+                if (response.code === 0) {
                     setUser(response.data.data);
                 } else {
                     setError(response.data.msg);
@@ -30,12 +30,12 @@ export default function ProfilePage() {
                     setError(err.response?.data?.msg || '获取用户信息失败');
                 }
             });
-    }, []); // 空数组表示只在组件加载时运行一次
+    }, [logout]);
 
     if (error) {
         return (
-            <div className="login-container">
-                <div className="login-form">
+            <div className="auth-container">
+                <div className="auth-card">
                     <p className="form-error">{error}</p>
                     <button className="form-button" onClick={() => navigate('/login')}>
                         返回登录
@@ -47,8 +47,8 @@ export default function ProfilePage() {
 
     if (!user) {
         return (
-            <div className="login-container">
-                <div className="login-form">
+            <div className="auth-container">
+                <div className="auth-card">
                     <p>正在加载用户信息...</p>
                 </div>
             </div>
@@ -56,21 +56,17 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="login-container">
-            <div className="login-form">
+        <div className="auth-container">
+            <div className="auth-card">
                 <h2>个人资料</h2>
                 <div className="profile-info">
                     <div className="info-group">
-                        <label>用户名</label>
+                        <label>学号</label>
                         <p>{user.username}</p>
                     </div>
                     <div className="info-group">
                         <label>ID</label>
                         <p>{user.ID}</p>
-                    </div>
-                    <div className="info-group">
-                        <label>邮箱</label>
-                        <p>{user.email || '未设置'}</p>
                     </div>
                     <div className="info-group">
                         <label>简介</label>

@@ -1,3 +1,4 @@
+
 // 路由注册，URL和处理函数的映射表，`r.GET(...)`, `r.POST(...)`, `r.Group(...)` 以及应用中间件等
 package routes
 

@@ -10,6 +10,7 @@ import (
 	"practice_usermanagement/pkg/e"
 	"practice_usermanagement/pkg/util"
 	"strconv"
+	"unicode/utf8" // 导入 utf8
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -21,27 +22,33 @@ import (
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        user  body      object{username=string,password=string}  true  "用户名和密码"
+// @Param        user  body      object{username=string,password=string}  true  "学号和密码"
 // @Success      200   {object}  util.Response
 // @Router       /api/register [post]
 func Register(c *gin.Context) {
 	var req struct {
-		Username string `json:"username" binding:"required"`
+		Username string `json:"username" binding:"required"` // Username 现在是学号
 		Password string `json:"password" binding:"required"`
-		Email    string `json:"email"` //非必须
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		util.RespondError(c, http.StatusBadRequest, e.InvalidParams)
 		return
 	}
+
+	// 【【【【【 新增：学号检查逻辑 】】】】】
+	if utf8.RuneCountInString(req.Username) != 10 {
+		util.Respond(c, http.StatusBadRequest, e.InvalidParams, gin.H{"error": "输入错误。请输入10位学号。"})
+		return
+	}
+	// 还可以添加一个正则，确保是数字，这里暂时只检查长度
+
 	var user model.User
 	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err == nil {
-		util.Respond(c, http.StatusBadRequest, e.ERROR, gin.H{"error": "用户名已存在"})
+		util.Respond(c, http.StatusBadRequest, e.ERROR, gin.H{"error": "该学号已被注册"})
 		return
 	}
 	newUser := model.User{
 		Username: req.Username,
-		Email:    req.Email,
 	}
 	if err := newUser.SetPassword(req.Password); err != nil {
 		util.RespondError(c, http.StatusInternalServerError, e.ERROR)
@@ -60,7 +67,7 @@ func Register(c *gin.Context) {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        user  body      object{username=string,password=string}  true  "用户名和密码"
+// @Param        user  body      object{username=string,password=string}  true  "学号和密码"
 // @Success      200   {object}  util.Response
 // @Router       /api/login [post]
 func Login(c *gin.Context) {
@@ -75,14 +82,14 @@ func Login(c *gin.Context) {
 	var user model.User
 	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			util.Respond(c, http.StatusUnauthorized, e.ERROR, gin.H{"error": "incorrect username or password"})
+			util.Respond(c, http.StatusUnauthorized, e.ERROR, gin.H{"error": "学号或密码错误"})
 			return
 		}
 		util.RespondError(c, http.StatusInternalServerError, e.ERROR)
 		return
 	}
 	if !user.CheckPassword(req.Password) {
-		util.Respond(c, http.StatusUnauthorized, e.ERROR, gin.H{"error": "incorrect username or password"})
+		util.Respond(c, http.StatusUnauthorized, e.ERROR, gin.H{"error": "学号或密码错误"})
 		return
 	}
 	token, err := util.GenerateToken(user.ID, user.Username)
@@ -109,7 +116,7 @@ func GetProfile(c *gin.Context) {
 		return
 	}
 	var user model.User
-	if err := database.DB.Select("username", "email", "bio").First(&user, uid).Error; err != nil {
+	if err := database.DB.Select("username", "bio").First(&user, uid).Error; err != nil { // 移除了 email
 		if err == gorm.ErrRecordNotFound {
 			util.Respond(c, http.StatusNotFound, e.ERROR, gin.H{"error": "user not found"})
 			return
@@ -126,14 +133,13 @@ func GetProfile(c *gin.Context) {
 // @Tags         User
 // @Accept       json
 // @Produce      json
-// @Param        user  body      object{email=string,bio=string}  true  "要更新的信息"
+// @Param        user  body      object{bio=string}  true  "要更新的信息"
 // @Success      200   {object}  util.Response
 // @Security     ApiKeyAuth
 // @Router       /api/user [put]
 func UpdateUser(c *gin.Context) {
 	var req struct {
-		Email string `json:"email"`
-		Bio   string `json:"bio"`
+		Bio string `json:"bio"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		util.RespondError(c, http.StatusBadRequest, e.InvalidParams)
@@ -146,9 +152,8 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	updates := model.User{
-		Email: req.Email,
-		Bio:   req.Bio,
+	updates := model.User{ // 移除了 Email
+		Bio: req.Bio,
 	}
 	if err := database.DB.Model(&user).Updates(updates).Error; err != nil {
 		util.RespondError(c, http.StatusInternalServerError, e.ERROR)
@@ -178,7 +183,7 @@ func GetUser(c *gin.Context) {
 
 // SearchUsers godoc
 // @Summary      搜索用户
-// @Description  根据用户名搜索用户列表
+// @Description  根据学号搜索用户列表
 // @Tags         User
 // @Produce      json
 // @Param        username query     string  false  "Username for searching"
@@ -205,10 +210,6 @@ func SearchUsers(c *gin.Context) {
 	util.RespondSuccess(c, users)
 }
 
-// controller/user_controller.go
-
-// ... (你其他的 Register, Login 等函数) ...
-
 // GetMe godoc
 // @Summary      获取当前用户信息
 // @Description  根据 Token 获取当前登录用户的信息
@@ -234,7 +235,7 @@ func GetMe(c *gin.Context) {
 
 	var user model.User
 	// 根据 userID 查询用户，不返回 PasswordHash
-	if err := database.DB.Select("id", "username", "email", "bio", "created_at").First(&user, userID).Error; err != nil {
+	if err := database.DB.Select("id", "username", "bio", "created_at").First(&user, userID).Error; err != nil { // 移除了 email
 		util.Respond(c, http.StatusNotFound, e.ERROR, gin.H{"error": "User not found"})
 		return
 	}

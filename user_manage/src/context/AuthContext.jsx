@@ -1,7 +1,6 @@
-import { createContext, useState } from 'react';
+import { useState } from 'react';
 import { loginApi, registerApi } from '../api/axios';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './AuthContext.js';
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('jwt_token'));
@@ -18,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (username, password) => {
         try {
             const response = await loginApi(username, password);
-            
+
             // 检查业务错误码
             if (response.code === 0 && response.data?.token) {
                 const newToken = response.data.token;
@@ -33,7 +32,8 @@ export const AuthProvider = ({ children }) => {
 
                 return { success: true };
             } else {
-                throw new Error(response.msg || '登录失败');
+                // 【【【【【 修改点：优先使用后端返回的详细错误 】】】】】
+                throw new Error(response.data?.error || response.msg || '登录失败');
             }
         } catch (error) {
             console.error('Login failed:', error);
@@ -41,10 +41,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (username, password, email) => {
+    // 【【【【【 修改点 】】】】】
+    const register = async (username, password) => {
         try {
-            const _ = await registerApi(username, password, email);
-            return { success: true };
+            // 不再传递 email
+            const response = await registerApi(username, password);
+            // 【【【【【 修改点：增加后端错误处理 】】】】】
+            if (response.code === 0) {
+                return { success: true };
+            } else {
+                throw new Error(response.data?.error || response.msg || '注册失败');
+            }
 
         } catch (error) {
             console.error('Register failed:', error);

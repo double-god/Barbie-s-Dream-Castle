@@ -1,0 +1,159 @@
+/* src/pages/AuthPage.css */
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    /* background-color: #f4f7f6; */
+
+    /* 添加半透明背景和毛玻璃滤镜 */
+    background-color: rgba(255, 255, 255, 0.1);
+    /* 轻微的白色蒙版 */
+    backdrop-filter: blur(10px);
+    /* 关键的毛玻璃效果 */
+    -webkit-backdrop-filter: blur(10px);
+    /* 兼容 Safari */
+}
+
+.auth-card {
+    background: #ffffff;
+    padding: 2.5rem;
+    /* 增加内边距 */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* 增加表单项之间的间距 */
+    overflow: hidden;
+    /* 确保 Tab 不会溢出圆角 */
+}
+
+/* Tab 切换 */
+.auth-tabs {
+    display: flex;
+    width: 100%;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 0.5rem;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #aaa;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    /* 盖住父元素的 border */
+}
+
+.auth-tab.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* 增加表单内间距 */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input {
+    padding: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #f9f9f9;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    outline: none;
+}
+
+.form-button {
+    padding: 0.85rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+.form-error {
+    color: #d93025;
+    font-size: 0.9rem;
+    text-align: center;
+    background: #fbeae9;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.form-success {
+    color: #0f9d58;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form-button.loading {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.form-button.success {
+    background-color: #0f9d58;
+}
+
+/* Profile page specific styles */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-group label {
+    font-weight: bold;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.info-group p {
+    margin: 0;
+    padding: 0.75rem;
+    background: #f5f5f5;
+    border-radius: 6px;
+    font-size: 1rem;
+    word-break: break-all;
+}
