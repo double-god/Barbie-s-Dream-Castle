@@ -3,4 +3,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-image: url('https://picsum.photos/1920/1080');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }

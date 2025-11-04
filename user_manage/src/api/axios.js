@@ -47,8 +47,10 @@ export const loginApi = (username, password) => {
     return api.post('/login', { username, password });
 };
 
-export const registerApi = (username, password, email) => {
-    return api.post('/register', { username, password, email });
+// 【【【【【 修改点 】】】】】
+export const registerApi = (username, password) => {
+    // 不再发送 email
+    return api.post('/register', { username, password });
 };
 
 export const getUserProfile = () => {

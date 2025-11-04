@@ -1,11 +1,10 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/useAuth';
-import LoginPage from './pages/Login.jsx';
-import RegisterPage from './pages/Register.jsx';
+import AuthPage from './pages/AuthPage.jsx'; 
 import ProfilePage from './pages/profile.jsx';
 
-// (关键) 保护组件：如果用户没有 Token，就重定向到登录页
+//保护组件：如果用户没有 Token，就重定向到登录页
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth();
   if (!token) {
@@ -19,10 +18,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
 
-        {/* /profile 页面必须被保护 */}
+        {/* /profile 页面必须保护 */}
         <Route
           path="/profile"
           element={

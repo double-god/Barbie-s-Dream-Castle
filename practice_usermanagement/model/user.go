@@ -8,8 +8,7 @@ import (
 
 type User struct {
 	ID           uint   `gorm:"primarykey" json:"id"`
-	Username     string `gorm:"unique;not null" json:"username"`
-	Email        string `gorm:"unique;not null" json:"email"`
+	Username     string `gorm:"unique;not null" json:"username"` // 我们继续用 Username 字段现在代表“学号”
 	PasswordHash string `gorm:"not null" json:"-"` // JSON响应中忽略此字段
 	Bio          string `json:"bio"`
 	CreatedAt    int64  `gorm:"autoCreateTime" json:"created_at"`
@@ -27,7 +26,7 @@ func (u *User) SetPassword(password string) error {
 }
 
 // CheckPassword 验证用户密码
-func (u *User) CheckPassword(password string) bool { //bcrypt.CompareHashAndPassword 比较哈希值和明文密码.这是一种方法的定义
+func (u *User) CheckPassword(password string) bool { //bcrypt.CompareHashAndPassword 比较哈希值和明文密码.方法的定义
 	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 	return err == nil
 }
