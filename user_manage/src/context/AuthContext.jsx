@@ -41,12 +41,12 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // 【【【【【 修改点 】】】】】
+    
     const register = async (username, password) => {
         try {
             // 不再传递 email
             const response = await registerApi(username, password);
-            // 【【【【【 修改点：增加后端错误处理 】】】】】
+            
             if (response.code === 0) {
                 return { success: true };
             } else {
