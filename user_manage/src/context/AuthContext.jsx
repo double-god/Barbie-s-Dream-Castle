@@ -32,12 +32,13 @@ export const AuthProvider = ({ children }) => {
 
                 return { success: true };
             } else {
-                // 【【【【【 修改点：优先使用后端返回的详细错误 】】】】】
+                // 成功请求，但业务失败（例如 code != 0）
                 throw new Error(response.data?.error || response.msg || '登录失败');
             }
         } catch (error) {
             console.error('Login failed:', error);
-            throw new Error(error.message || '登录失败');
+            // 从 error 对象 (即后端 JSON) 中提取错误信息
+            throw new Error(error.data?.error || error.msg || '登录失败');
         }
     };
 
@@ -50,12 +51,15 @@ export const AuthProvider = ({ children }) => {
             if (response.code === 0) {
                 return { success: true };
             } else {
+                 // 成功请求，但业务失败（例如 code != 0）
                 throw new Error(response.data?.error || response.msg || '注册失败');
             }
 
         } catch (error) {
             console.error('Register failed:', error);
-            throw new Error(error.message || '注册失败');
+            // 从 error 对象 (即后端 JSON) 中提取错误信息
+            // 这样 "该学号已被注册" 就能被正确抛出
+            throw new Error(error.data?.error || error.msg || '注册失败');
         }
     };
 

@@ -9,6 +9,7 @@ import (
 	"practice_usermanagement/pkg/database"
 	"practice_usermanagement/pkg/e"
 	"practice_usermanagement/pkg/util"
+	"regexp"
 	"strconv"
 	"unicode/utf8" // 导入 utf8
 
@@ -35,12 +36,16 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// 【【【【【 新增：学号检查逻辑 】】】】】
+	isNumeric, _ := regexp.MatchString("^[0-9]+$", req.Username)
+	if !isNumeric {
+		util.Respond(c, http.StatusBadRequest, e.InvalidParams, gin.H{"error": "学号格式错误！"})
+		return
+	}
+
 	if utf8.RuneCountInString(req.Username) != 10 {
 		util.Respond(c, http.StatusBadRequest, e.InvalidParams, gin.H{"error": "输入错误。请输入10位学号。"})
 		return
 	}
-	// 还可以添加一个正则，确保是数字，这里暂时只检查长度
 
 	var user model.User
 	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err == nil {
