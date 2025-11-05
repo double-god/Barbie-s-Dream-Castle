@@ -4,11 +4,11 @@
 package controller
 
 import (
+	"backend/internal/app/model"
+	"backend/internal/pkg/database"
+	"backend/internal/pkg/e"
+	"backend/internal/pkg/util"
 	"net/http"
-	"practice_usermanagement/model"
-	"practice_usermanagement/pkg/database"
-	"practice_usermanagement/pkg/e"
-	"practice_usermanagement/pkg/util"
 	"regexp"
 	"strconv"
 	"unicode/utf8" // 导入 utf8

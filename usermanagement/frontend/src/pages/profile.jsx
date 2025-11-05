@@ -1,9 +1,9 @@
 // src/pages/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
-import { useAuth } from '../context/useAuth';
-import './AuthPage.css';
+import api from '../services/auth.service';
+import { useAuth } from '../lib/hooks/context/useAuth';
+import '../styles/AuthPage.css';
 
 export default function ProfilePage() {
     const navigate = useNavigate();

@@ -1,4 +1,4 @@
-module practice_usermanagement
+module backend
 
 go 1.25.1
 

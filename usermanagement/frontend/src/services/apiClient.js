@@ -1,7 +1,7 @@
-// src/api/axios.js
+// src/service/apiClient.js,只负责连接后端 API
 import axios from 'axios';
 
-// src/api/axios.js
+// src/service/apiClient.js
 const api = axios.create({
     // 把它改成一个“相对路径”
     // 这会告诉 React：“请向你当前所在的域名发起 /api 请求”
@@ -43,15 +43,7 @@ api.interceptors.response.use(
 );
 
 // API 方法
-export const loginApi = (username, password) => {
-    return api.post('/login', { username, password });
-};
 
-// 【【【【【 修改点 】】】】】
-export const registerApi = (username, password) => {
-    // 不再发送 email
-    return api.post('/register', { username, password });
-};
 
 export const getUserProfile = () => {
     return api.get('/user/me');

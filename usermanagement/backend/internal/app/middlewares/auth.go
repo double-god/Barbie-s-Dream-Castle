@@ -2,9 +2,9 @@
 package middlewares
 
 import (
+	"backend/internal/pkg/e"
+	"backend/internal/pkg/util"
 	"net/http"
-	"practice_usermanagement/pkg/e"
-	"practice_usermanagement/pkg/util"
 	"strings"
 
 	"github.com/gin-gonic/gin"

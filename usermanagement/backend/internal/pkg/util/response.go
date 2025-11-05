@@ -2,8 +2,8 @@
 package util
 
 import (
+	"backend/internal/pkg/e"
 	"net/http"
-	"practice_usermanagement/pkg/e"
 
 	"github.com/gin-gonic/gin"
 )

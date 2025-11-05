@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loginApi, registerApi } from '../api/axios';
+import { loginApi, registerApi } from '../../../services/auth.service';
 import { AuthContext } from './AuthContext.js';
 
 export const AuthProvider = ({ children }) => {
@@ -42,16 +42,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    
+
     const register = async (username, password) => {
         try {
             // 不再传递 email
             const response = await registerApi(username, password);
-            
+
             if (response.code === 0) {
                 return { success: true };
             } else {
-                 // 成功请求，但业务失败（例如 code != 0）
+                // 成功请求，但业务失败（例如 code != 0）
                 throw new Error(response.data?.error || response.msg || '注册失败');
             }
 

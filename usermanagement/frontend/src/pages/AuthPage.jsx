@@ -1,8 +1,8 @@
 // src/pages/AuthPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
-import './AuthPage.css'; // 使用新的CSS
+import { useAuth } from '../lib/hooks/context/useAuth';
+import '../styles/AuthPage.css'; // 使用新的CSS
 
 // 登录表单
 const LoginForm = () => {

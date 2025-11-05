@@ -1,3 +1,4 @@
+// msg.go, 存放应用的错误码及其对应的信息,供统一响应使用
 package e
 const(
 	SUCCESS  =0

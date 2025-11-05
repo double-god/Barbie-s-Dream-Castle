@@ -2,10 +2,10 @@
 package main
 
 import (
+	"backend/internal/app/router"
+	"backend/internal/config" // 确保这是你的模块名
+	"backend/internal/pkg/database"
 	"fmt"
-	"practice_usermanagement/config" // 确保这是你的模块名
-	"practice_usermanagement/pkg/database"
-	"practice_usermanagement/routes"
 	"time"
 
 	"github.com/gin-contrib/cors" // <--- 1. 导入
@@ -28,7 +28,7 @@ func main() {
 	}
 	r.Use(cors.New(corsConfig))
 
-	routes.RegisterRoutes(r)
+	router.RegisterRoutes(r)
 
 	port := fmt.Sprintf(":%s", config.Config.ServerPort)
 	if err := r.Run(port); err != nil {

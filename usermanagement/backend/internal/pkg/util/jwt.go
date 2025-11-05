@@ -2,7 +2,7 @@
 package util
 
 import (
-	"practice_usermanagement/config"
+	"backend/internal/config"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
